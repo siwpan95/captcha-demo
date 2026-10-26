@@ -331,6 +331,8 @@ class TextCaptchaModel(CaptchaModel):
             return CaptchaResult(success=False, message="验证码未生成")
         
         self.result.attempts += 1
+        # 每次判定先归零：否则上一次成功会把后续错误输入也判成通过（2026-10-26 自检发现）。
+        self.result.success = False
         self.text_data.user_input = user_input
         
         if user_input.upper() == self.text_data.code:
